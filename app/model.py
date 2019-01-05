@@ -1,10 +1,9 @@
 import quandl
 import numpy as np
-import os
 
 def getChartsData(*args):
     charts_info = args
-    quandl.ApiConfig.api_key = "coMpzT82DE4TQXC8y_kG"
+
     charts = []
     chart_titles = []
     charts_comments = []
