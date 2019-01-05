@@ -1,0 +1,86 @@
+{% macro import_highstock() %}
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+    <script src="{{ url_for('static', filename='js/modifyHighchartsViewdata.js') }}"></script>
+{% endmacro %}
+
+{% macro body_chart(charts, charts_comments) %}
+    {% for chart, comments in charts|zip(charts_comments) %}
+        {{ body_chart_each(chart, comments) }}
+    {% endfor %}
+{% endmacro %}
+{% macro body_chart_each(chart, comments) %}
+    <h1 class="page-header">{{chart["chart_title"]}}</h1>
+    {% for comment in comments %}<p class="lead">{{comment|safe}}</p>{% endfor %}
+    <div class="panel panel-default"><div id="{{chart["chart_title"]}}" class="panel-body" style="width:100%;height:400px"></div></div>
+{% endmacro %}
+
+{% macro script_chart(charts) %}
+    <script>
+        var colorPallete = ["#33E6D9","#FFA600","#A64B00","#8CCCF2","#ED0000","#A6FF00","#8C19A3","#00AAE6","#5CF22C","#FF6600","#806600","#0057D9"];
+        var buttons = [
+            {type: 'month',count: 1,text: '1M'}, 
+            {type: 'month',count: 3,text: '3M'},
+            {type: 'month',count: 6,text: '6M'},
+            {type: 'ytd',text: 'YTD'},
+            {type: 'year',count: 1,text: '1Y'},
+            {type: 'year',count: 3,text: '3Y'},
+            {type: 'year',count: 5,text: '5Y'},
+            {type: 'all',text: 'ALL'}
+        ];
+
+        var chart_title = [];
+        var series = [];
+        function createChart() {
+            Highcharts.stockChart(chart_title, {
+                title: {text: ''},
+                legend: {enabled: true,verticalAlign: "top"},
+                series: series,
+                tooltip: {valueDecimals: 1},
+                rangeSelector: {
+                    selected: 5,
+                    verticalAlign: "bottom",
+                    buttons: buttons,
+                    inputDateFormat: "%b %Y",
+                    inputEditDateFormat: "%Y-%m",
+                    inputStyle: {fontWeight: 'bold'},
+                    buttonTheme: {
+                        fill: 'white',
+                        stroke: '#C0C0C8',
+                        'stroke-width': 1,
+                        style: {color: "#0057D9",fontWeight: 'bold'},
+                        states: {select: {
+                            fill: '#D0D0D8',
+                            style: {color: "#0057D9",fontWeight: 'bold'},
+                        }}
+                    }
+                },
+                yAxis: [{
+                    opposite: false,
+                    lineColor: "black",
+                    lineWidth: 1,
+                    showLastLabel: true
+                }],
+                xAxis: {lineColor: "black",gridLineWidth: 1,},
+                plotOptions:{line: {shadow: true}},
+                colors: colorPallete,
+                chart: {style: {fontFamily: 'sans-serif'}},
+            });
+        }
+
+        {% for chart in charts %}
+            series = [];
+            {% for dataset in chart["dataset"] %}
+                series.push({
+                    name:'{{ dataset["legend"] }}',
+                    type:'line',
+                    data:{{ dataset["data"] | tojson }}
+                });
+            {% endfor %} 
+
+            chart_title = '{{chart["chart_title"]}}'
+            createChart();
+        {% endfor %}
+    </script>
+{% endmacro %}

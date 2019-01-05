@@ -1,0 +1,13 @@
+{% from "macro_chart.html" import import_highstock, body_chart, script_chart %}
+{% extends "base.html" %}
+{% set active_page = 'chart' %}
+
+{% block app_content %}
+    {{ body_chart(charts, charts_comments) }}
+{% endblock %}
+
+{% block scripts %}
+    {{ import_highstock() }}
+    {{ script_chart(charts) }}
+    {{super()}}
+{% endblock %}
