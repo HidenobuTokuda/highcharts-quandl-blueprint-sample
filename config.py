@@ -3,5 +3,4 @@ import quandl
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-class Config(object):
-    quandl.ApiConfig.api_key = os.environ.get('API_KEY') or ''
+#class Config(object):
