@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% set navigation_bar1 = [
-    ('/','chart', 'Chart'),
-    ('#','test','Test')
+    ('.PMIs','chart', 'Chart'),
+    ('.PMIs','test','Test')
 ] %}
 {% set active_page = active_page|default('chart') %}
 
@@ -24,7 +24,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     {% for href, id, caption in navigation_bar1 %}
-                        <li {% if id == active_page %}class="active"{% endif %}><a href="{{href|e}}">{{ caption|e }}</a></li>
+                        <li {% if id == active_page %}class="active"{% endif %}><a href="{{url_for(href)}}">{{ caption|e }}</a></li>
                     {% endfor %}
                     <li {% if "test" == active_page %}class="active"{% endif %}class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Test<span class="caret"></span></a>

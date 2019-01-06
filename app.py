@@ -8,10 +8,10 @@ bootstrap = Bootstrap(app)
 app.jinja_env.filters['zip'] = zip
 
 #from app import routes
-from app.routes import app1
-modules_define = [app1]
-for app1 in modules_define:
-    app.register_blueprint(app1)
+from app_chart.routes import app_chart
+modules_define = [app_chart]
+for module in modules_define:
+    app.register_blueprint(module)
 
 if __name__ == '__main__':
     app.run()
